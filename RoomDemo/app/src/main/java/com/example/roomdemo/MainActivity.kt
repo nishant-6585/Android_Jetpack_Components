@@ -1,46 +1,35 @@
 package com.example.roomdemo
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.roomdemo.ui.theme.RoomDemoTheme
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.roomdemo.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : ComponentActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding : ActivityMainBinding
+
+    // Only traditional method work
+    lateinit var viewModel: SubscriberViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            RoomDemoTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-            }
-        }
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        actionBar?.show()
+        viewModel = ViewModelProvider(this)[SubscriberViewModel::class.java]
+        binding.myViewModel = viewModel
+        binding.lifecycleOwner = this
+
+        displaySubscriberList()
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RoomDemoTheme {
-        Greeting("Android")
+    private fun displaySubscriberList() {
+        viewModel.subscribers.observe(this, Observer {
+            Log.i("MyTag", it.toString())
+        })
     }
 }
