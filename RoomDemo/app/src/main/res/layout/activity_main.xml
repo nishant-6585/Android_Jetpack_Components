@@ -45,7 +45,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_gravity="center">
 
         <Button
             android:id="@+id/save_or_update_button"
@@ -64,10 +65,6 @@
             android:onClick="@{()->myViewModel.clearAllOrDelete()}"
             android:textSize="18sp"
             android:textStyle="bold"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
     </LinearLayout>
 
