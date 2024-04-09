@@ -1,5 +1,6 @@
 package com.example.roomdemo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -19,6 +20,8 @@ class MainActivity : AppCompatActivity() {
     // Only traditional method work
     lateinit var viewModel: SubscriberViewModel
 
+    private lateinit var adapter: MyRecyclerViewAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -37,15 +40,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         binding.subscriberRecyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = MyRecyclerViewAdapter { selectedItem: Subscriber -> listItemClicked(selectedItem) }
+        binding.subscriberRecyclerView.adapter = adapter
         displaySubscriberList()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun displaySubscriberList() {
-        viewModel.subscribers.observe(this, Observer {
+        viewModel.getSavedSubscribers().observe(this, Observer {
             Log.i("MyTag", it.toString())
-            binding.subscriberRecyclerView.adapter = MyRecyclerViewAdapter(
-                it
-            ) { selectedItem: Subscriber -> listItemClicked(selectedItem) }
+            adapter.setList(it)
+            adapter.notifyDataSetChanged()
         })
     }
 

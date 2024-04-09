@@ -16,11 +16,11 @@ class SubscriberRepository @Inject constructor(
         return dao.updateSubscriber(subscriber)
     }
 
-    suspend fun delete(subscriber: Subscriber) {
-        dao.deleteSubscriber(subscriber)
+    suspend fun delete(subscriber: Subscriber): Int {
+        return dao.deleteSubscriber(subscriber)
     }
 
-    suspend fun deleteALl() {
-        dao.deleteAll()
+    suspend fun deleteALl(): Int {
+        return dao.deleteAll()
     }
 }
